@@ -1,0 +1,32 @@
+{{ if .Values.plgx.ui.ingress.enabled }}
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: {{ template "polylogyx.fullname" . }}-ui-ingress
+  labels:
+    name: {{ template "polylogyx.fullname" . }}-ui-ingress
+  {{ if toYaml .Values.plgx.ui.ingress.annotations }}
+  annotations: {{ toYaml .Values.plgx.ui.ingress.annotations | nindent 4 }}
+  {{ end }}
+spec:
+  rules:
+  - host: {{ .Values.plgx.ingress.host }}
+    http:
+      paths:
+      - path: /services
+        pathType: Prefix
+        backend:
+          serviceName: {{ template "polylogyx.fullname" . }}-esp-ui
+          servicePort: 5000
+      - path: /distributed/result
+        pathType: Prefix
+        backend:
+          serviceName: {{ template "polylogyx.fullname" . }}-esp-ui
+          servicePort: 5000
+  {{ if .Values.plgx.ingress.tls.enabled }}
+  tls:
+  - hosts:
+    - {{ .Values.plgx.ingress.host }}
+    secretName: {{ .Values.plgx.ingress.secretName }}
+  {{ end }}
+{{ end }}

@@ -1,0 +1,27 @@
+{{ if .Values.plgx.fileserver.ingress.enabled }}
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: {{ template "polylogyx.fullname" . }}-fileserver-ingress
+  labels:
+    name: {{ template "polylogyx.fullname" . }}-fileserver-ingress
+  {{ if .Values.plgx.fileserver.ingress.annotations }}
+  annotations: {{ toYaml .Values.plgx.fileserver.ingress.annotations | nindent 4 }}
+  {{ end }}
+spec:
+  rules:
+  - host: {{ .Values.plgx.ingress.host }}
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          serviceName: {{ template "polylogyx.fullname" . }}-fileserver
+          servicePort: 80
+  {{ if .Values.plgx.ingress.tls.enabled }}
+  tls:
+  - hosts:
+    - {{ .Values.plgx.ingress.host }}
+    secretName: {{ .Values.plgx.ingress.secretName }}
+  {{ end }}
+{{ end }}

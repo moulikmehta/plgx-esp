@@ -1,0 +1,27 @@
+{{ if and .Values.plgx.ingress.enabled .Values.plgx.esp.ingress.enabled }}
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: {{ template "polylogyx.fullname" . }}-esp-ingress
+  labels:
+    name: {{ template "polylogyx.fullname" . }}-esp-ingress
+  {{ if toYaml .Values.plgx.esp.ingress.annotations }}
+  annotations: {{ toYaml .Values.plgx.esp.ingress.annotations | nindent 4 }}
+  {{ end }}
+spec:
+  rules:
+  - host: {{ .Values.plgx.ingress.host }}
+    http:
+      paths:
+      - path: /esp(/|$)(.*)
+        pathType: Prefix
+        backend:
+          serviceName: {{ template "polylogyx.fullname" . }}-esp
+          servicePort: 6000
+  {{ if .Values.plgx.ingress.tls.enabled }}
+  tls:
+  - hosts:
+    - {{ .Values.plgx.ingress.host }}
+    secretName: {{ .Values.plgx.ingress.secretName }}
+  {{ end }}
+{{ end }}

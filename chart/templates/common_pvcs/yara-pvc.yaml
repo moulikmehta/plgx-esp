@@ -1,0 +1,15 @@
+{{- if or .Values.plgx.persistence.yara.enabled (not .Values.plgx.persistence.yara.existingClaim) -}}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ template "polylogyx.fullname" . }}-yara-pvc
+  labels:
+    name: {{ template "polylogyx.fullname" . }}-yara-pvc
+spec:
+  accessModes:
+    - {{ .Values.plgx.persistence.yara.accessMode | quote }}
+  resources:
+    requests:
+      storage: {{ .Values.plgx.persistence.yara.size | quote }}
+  {{- include "polylogyx.yara.storageClass" . | nindent 2 }}
+{{- end -}}

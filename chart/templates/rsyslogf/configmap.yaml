@@ -1,0 +1,12 @@
+{{ if .Values.plgx.rsyslogf.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "polylogyx.fullname" . }}-rsyslogf-cfg
+  labels:
+    name: {{ template "polylogyx.fullname" . }}-rsyslogf-cfg
+data:
+  rsyslogd.conf: |
+    module(load="imtcp")
+    input(type="imtcp" port="514")
+{{ end }}

@@ -1,0 +1,59 @@
+{{ if .Values.plgx.fileserver.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "polylogyx.fullname" . }}-fileserver
+  {{ if .Values.plgx.fileserver.annotations }}
+  annotations: {{ toYaml .Values.plgx.fileserver.annotations | nindent 4 }}
+  {{ end }}
+  labels:
+    name: {{ template "polylogyx.fullname" . }}-fileserver
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: {{ template "polylogyx.fullname" . }}-fileserver
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      {{ if .Values.plgx.fileserver.annotations }}
+      annotations: {{ toYaml .Values.plgx.fileserver.annotations | nindent 8 }}
+      {{ end }}
+      labels:
+        name: {{ template "polylogyx.fullname" . }}-fileserver
+    spec:
+      containers:
+        - name: {{ template "polylogyx.fullname" . }}-fileserver
+          image: {{ .Values.plgx.fileserver.image }}
+          imagePullPolicy: {{ .Values.plgx.fileserver.pullPolicy | quote }}
+          ports:
+            - containerPort: 80
+          resources: {}
+          volumeMounts:
+            - name: yara
+              mountPath: /resources/yara
+            - name: osqueryflags
+              mountPath: /app/downloads
+      restartPolicy: Always
+      {{ if .Values.plgx.fileserver.nodeSelector }}
+      nodeSelector: {{ toYaml .Values.plgx.fileserver.nodeSelector | nindent 8 }}
+      {{ end }}
+      {{ if .Values.plgx.fileserver.tolerations }}
+      tolerations: {{ toYaml .Values.plgx.fileserver.tolerations | nindent 8 }}
+      {{ end }}
+      {{ if .Values.plgx.fileserver.affinity }}
+      affinity: {{ toYaml .Values.plgx.fileserver.affinity | nindent 8 }}
+      {{ end }}
+      volumes:
+        - name: yara
+          {{ if .Values.plgx.persistence.yara.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ include "polylogyx.yara.pvcName" . }}
+          {{ else }}
+            emptyDir: {}
+          {{ end }}
+        - name: osqueryflags
+          configMap:
+            name: {{ template "polylogyx.fullname" . }}-esp-fileserver-configmap
+{{ end }}
