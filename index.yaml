@@ -3,7 +3,7 @@ entries:
   polylogyx-esp:
   - apiVersion: v2
     appVersion: 2.1.0
-    created: "2021-02-01T14:35:48.433392015Z"
+    created: "2021-03-03T02:03:43.582863359Z"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -14,7 +14,7 @@ entries:
       repository: https://charts.bitnami.com/bitnami
       version: 8.5.4
     description: A Helm Chart for deploying the polylogyx endpoint security platform
-    digest: f801293f712a3ddc760c30c82bc944cf1b366d992663966f574e8bbe63e9bff7
+    digest: c653e18381ca958f1f61336327b4d8aaf2b08f3db512461e7cbc40f34d248155
     home: https://polylogyx.github.io/plgx-esp
     keywords:
     - polylogyx
@@ -26,6 +26,6 @@ entries:
     - eclecticiq
     name: polylogyx-esp
     urls:
-    - https://github.com/moulikmehta/plgx-esp/releases/download/polylogyx-esp-0.0.11/polylogyx-esp-0.0.11.tgz
-    version: 0.0.11
-generated: "2021-02-01T14:35:48.049403579Z"
+    - https://github.com/moulikmehta/plgx-esp/releases/download/polylogyx-esp-0.0.13/polylogyx-esp-0.0.13.tgz
+    version: 0.0.13
+generated: "2021-03-03T02:03:42.801877315Z"
